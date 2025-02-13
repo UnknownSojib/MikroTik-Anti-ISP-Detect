@@ -1,0 +1,44 @@
+
+/interface list add name=WAN-PROTECT comment="WAN PROTECT by Unknown Sojib"
+/interface list member add interface="ether1" list=WAN-PROTECT comment="WAN PROTECT by Unknown Sojib"
+## Block Winbox Scan
+/ip firewall filter add action=drop chain=input dst-port=21,22,23,8291,80,443,8728,8729 comment="Block Winbox Scan - by Unknown Sojib" in-interface-list=WAN-PROTECT protocol=tcp
+/ip firewall filter add action=drop chain=input dst-port=21,22,23,8291,80,443,8728,8729 in-interface-list=WAN-PROTECT protocol=udp
+## Block Neighbor Discovery
+/ip firewall filter add action=drop chain=input comment="Block Neighbor Discovery - by Unknown Sojib" in-interface-list=WAN-PROTECT dst-port=5678 protocol=tcp
+/ip firewall filter add action=drop chain=input in-interface-list=WAN-PROTECT dst-port=5678 protocol=udp
+/ip neighbor discovery-settings set discover-interface-list=!WAN-PROTECT
+## Block MAC Address
+/ip firewall filter add action=drop chain=input comment="Block MAC Address - by Unknown Sojib" in-interface-list=WAN-PROTECT dst-port=20561 protocol=tcp
+/ip firewall filter add action=drop chain=input in-interface-list=WAN-PROTECT dst-port=20561 protocol=udp
+/tool mac-server mac-winbox set allowed-interface-list=none
+/tool mac-server set allowed-interface-list=none
+/tool mac-server ping set enabled=no
+## Block Traceroute
+/ip firewall filter add action=drop chain=input comment="Block Traceroute - by Unknown Sojib" in-interface-list=WAN-PROTECT dst-port=33434-33534 protocol=tcp
+/ip firewall filter add action=drop chain=input in-interface-list=WAN-PROTECT dst-port=33434-33534 protocol=udp
+## Block RoMON
+/tool romon port add disabled=no forbid=yes comment="Block RoMON - by Unknown Sojib" interface="ether1"## Block DNS Poisoning
+/ip firewall filter add chain=input dst-port=53 in-interface-list=WAN-PROTECT protocol=tcp action=drop comment="Block Open Recursive DNS - by Unknown Sojib"
+/ip firewall filter add chain=input dst-port=53 in-interface-list=WAN-PROTECT protocol=udp action=drop## Block Open PROXY
+/ip proxy set enabled=no
+/ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=WAN-PROTECT protocol=tcp comment="Block Open PROXY - by Unknown Sojib"
+/ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=WAN-PROTECT protocol=udp
+## Block BTest Server
+/tool bandwidth-server set enabled=no authenticate=yes
+/ip firewall filter add action=drop chain=input dst-port=2000 in-interface-list=WAN-PROTECT protocol=tcp comment="Block BTest Server - by Unknown Sojib"
+/ip firewall filter add action=drop chain=input dst-port=2000 in-interface-list=WAN-PROTECT protocol=udp
+## Block SNMP
+/snmp set enabled=no
+/ip firewall filter add action=drop chain=input dst-port=161,162 in-interface-list=WAN-PROTECT protocol=tcp comment="Block SNMP - by Unknown Sojib"
+/ip firewall filter add action=drop chain=input dst-port=161,162 in-interface-list=WAN-PROTECT protocol=udp
+## Block The Dude
+/ip firewall filter add action=drop chain=input dst-port=2210,2211 in-interface-list=WAN-PROTECT protocol=tcp comment="Block The Dude - by Unknown Sojib"
+/ip firewall filter add action=drop chain=input dst-port=2210,2211 in-interface-list=WAN-PROTECT protocol=udp
+## Block IP Cloud
+/ip cloud set ddns-enabled=no
+/ip cloud advanced set use-local-address=no
+/ip cloud set update-time=no
+## Change MAC Interface
+/system identity set name="Desktop"
+/interface ethernet set "ether1" mac-address="XX:XX:XX:XX:XX:XX"
