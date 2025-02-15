@@ -28,9 +28,15 @@
 
 ## Block RoMON
 
-/tool romon port add disabled=no forbid=yes comment="Block RoMON - by Unknown Sojib" interface="ether1"## Block DNS Poisoning
+/tool romon port add disabled=no forbid=yes comment="Block RoMON - by Unknown Sojib" interface="ether1"
+
+## Block DNS Poisoning
+
 /ip firewall filter add chain=input dst-port=53 in-interface-list=WAN-PROTECT protocol=tcp action=drop comment="Block Open Recursive DNS - by Unknown Sojib"
-/ip firewall filter add chain=input dst-port=53 in-interface-list=WAN-PROTECT protocol=udp action=drop## Block Open PROXY
+/ip firewall filter add chain=input dst-port=53 in-interface-list=WAN-PROTECT protocol=udp action=drop
+
+## Block Open PROXY
+
 /ip proxy set enabled=no
 /ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=WAN-PROTECT protocol=tcp comment="Block Open PROXY - by Unknown Sojib"
 /ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=WAN-PROTECT protocol=udp
